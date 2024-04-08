@@ -18,8 +18,12 @@ export const uploadFileToDB = async (
       },
     );
 
-    await response.json();
-    revalidateTag("collection");
+    const data = await response.json();
+    console.log(data);
+    if (!data.err) {
+      revalidateTag("collection");
+    }
+    return data;
   } catch (err) {
     console.log(err);
     alert(

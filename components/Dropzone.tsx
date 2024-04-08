@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import DropzoneComponent from "react-dropzone";
 import { useToast } from "@/components/ui/use-toast";
-import { useTransition } from "react";
 import { uploadFileToDB } from "@/actions/upload";
 
 function Dropzone() {
@@ -32,9 +31,31 @@ function Dropzone() {
       });
       return;
     }
+    toast({
+      description: "csv is uploading",
+    });
     const formData = new FormData();
     formData.append("file", acceptedFiles[0]);
-    uploadFileToDB(formData, userEmail);
+    uploadFileToDB(formData, userEmail)
+      .then((res: any) => {
+        if (res.err) {
+          toast({
+            variant: "destructive",
+
+            description: res.err,
+          });
+        } else {
+          toast({
+            description: "csv is uploaded",
+          });
+        }
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          description: "something went wrong",
+        });
+      });
   };
 
   return (
